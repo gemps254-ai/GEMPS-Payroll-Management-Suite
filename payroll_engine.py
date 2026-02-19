@@ -111,15 +111,15 @@ def generate_payslip_pdf(emp_data, month, year):
     
     data_points = [
         ("Basic Salary", emp_data['Basic Salary']),
-        ("Allowances", emp_data['Allowances (KES)']),
+        ("Allowances", emp_data['Allowances']),
         ("Gross Pay", emp_data['Gross Pay (KES)']),
-        ("Pension Contribution", emp_data['Pension (KES)']),
-        ("NSSF", emp_data['NSSF (KES)']),
-        ("SHIF", emp_data['SHIF (KES)']),
-        ("Housing Levy", emp_data['Housing Levy (KES)']),
-        ("Taxable Salary", emp_data['Taxable Salary (KES)']),
-        ("Personal Relief", emp_data['Personal Relief (KES)']),
-        ("PAYE Deduction", -emp_data['PAYE (KES)']),
+        ("Pension Contribution", emp_data['Pension']),
+        ("NSSF", emp_data['NSSF']),
+        ("SHIF", emp_data['SHIF']),
+        ("Housing Levy", emp_data['Housing Levy']),
+        ("Taxable Salary", emp_data['Taxable Salary']),
+        ("Personal Relief", emp_data['Personal Relief']),
+        ("PAYE Deduction", -emp_data['PAYE']),
     ]
     for desc, val in data_points:
         pdf.cell(95, 8, desc, 1)
@@ -206,4 +206,5 @@ if st.session_state["results_df"] is not None:
         st.session_state["results_df"] = None
 
         st.rerun()
+
 
