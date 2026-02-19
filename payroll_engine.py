@@ -1,44 +1,4 @@
 import streamlit as st
-
-def check_password():
-    def password_entered():
-        # This line fetches the password from the Streamlit Cloud Secrets
-        if st.session_state["password"] == st.secrets["MY_PASSWORD"]:
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]
-        else:
-            st.session_state["password_correct"] = False
-
-    if "password_correct" not in st.session_state:
-        # First run, show input for password.
-        st.text_input(
-            "Please enter your password to access Payroll", 
-            type="password", 
-            on_change=password_entered, 
-            key="password"
-        )
-        return False
-    elif not st.session_state["password_correct"]:
-        # Password incorrect, show input + error.
-        st.text_input(
-            "Please enter your password to access Payroll", 
-            type="password", 
-            on_change=password_entered, 
-            key="password"
-        )
-        st.error("😕 Password incorrect")
-        return False
-    else:
-        # Password correct.
-        return True
-
-if check_password():
-    # --- EVERYTHING BELOW THIS LINE IS YOUR ACTUAL APP ---
-    st.title("✅ Payroll Management System")
-    st.write("Welcome to the restricted area.")
-    
-    # Your existing code goes here...
-import streamlit as st
 import pandas as pd
 import os
 from datetime import datetime
@@ -246,6 +206,7 @@ if st.session_state["results_df"] is not None:
         st.session_state["results_df"] = None
 
         st.rerun()
+
 
 
 
