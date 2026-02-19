@@ -1,13 +1,11 @@
 import streamlit as st
 
 def check_password():
-    """Returns True if the user had the correct password."""
-
     def password_entered():
-        """Checks whether a password entered by the user is correct."""
-        if st.session_state["password"] == "YourSecretPassword123":
+        # This line fetches the password from the Streamlit Cloud Secrets
+        if st.session_state["password"] == st.secrets["MY_PASSWORD"]:
             st.session_state["password_correct"] = True
-            del st.session_state["password"]  # don't store password
+            del st.session_state["password"]
         else:
             st.session_state["password_correct"] = False
 
@@ -248,6 +246,7 @@ if st.session_state["results_df"] is not None:
         st.session_state["results_df"] = None
 
         st.rerun()
+
 
 
 
