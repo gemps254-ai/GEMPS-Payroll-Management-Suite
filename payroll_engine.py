@@ -211,13 +211,14 @@ with d1:
             sheet.cell(row=current_excel_row, column=2).value = row_data.get('Staff No.', '')
             sheet.cell(row=current_excel_row, column=3).value = row_data.get('Employee Name', '')
             sheet.cell(row=current_excel_row, column=4).value = row_data.get('Basic Pay', 0)
-            sheet.cell(row=current_excel_row, column=9).value = row_data.get('Pension Contribution', 0)
-            sheet.cell(row=current_excel_row, column=10).value = row_data.get('NSSF', 0)
-            sheet.cell(row=current_excel_row, column=11).value = row_data.get('SHIF', 0)
-            sheet.cell(row=current_excel_row, column=12).value = row_data.get('AHL', 0)
-            sheet.cell(row=current_excel_row, column=13).value = row_data.get('Taxable Salary', 0)
-            sheet.cell(row=current_excel_row, column=14).value = row_data.get('Personal Relief', 0)
-            sheet.cell(row=current_excel_row, column=15).value = row_data.get('PAYE', 0)
+            sheet.cell(row=current_excel_row, column=5).value = row_data.get('Other Allowances', 0)
+            sheet.cell(row=current_excel_row, column=10).value = row_data.get('Pension Contribution', 0)
+            sheet.cell(row=current_excel_row, column=11).value = row_data.get('NSSF', 0)
+            sheet.cell(row=current_excel_row, column=12).value = row_data.get('SHIF', 0)
+            sheet.cell(row=current_excel_row, column=13).value = row_data.get('AHL', 0)
+            sheet.cell(row=current_excel_row, column=14).value = row_data.get('Taxable Salary', 0)
+            sheet.cell(row=current_excel_row, column=15).value = row_data.get('Personal Relief', 0)
+            sheet.cell(row=current_excel_row, column=16).value = row_data.get('PAYE', 0)
             sheet.cell(row=current_excel_row, column=17).value = row_data.get('Net Pay', 0)
 
         # 3. Optional: Hide extra rows if your template is longer than your data
@@ -253,6 +254,7 @@ with d1:
         st.session_state["results_df"] = None
 
         st.rerun()
+
 
 
 
