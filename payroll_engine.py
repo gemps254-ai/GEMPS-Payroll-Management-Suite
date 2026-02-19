@@ -232,7 +232,7 @@ with d1:
         processed_data = output.getvalue()
 
         st.download_button(
-            label="📊 Download Formatted Payroll Summary",
+            label="📊 Download Master Payroll",
             data=processed_data,
             file_name=f"{payroll_month}_Payroll_{payroll_year}.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -253,6 +253,7 @@ with d1:
         st.session_state["results_df"] = None
 
         st.rerun()
+
 
 
 
