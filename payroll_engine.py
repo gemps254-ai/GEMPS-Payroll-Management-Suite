@@ -208,7 +208,7 @@ with d1:
             current_excel_row = start_row + i
             
             # Fill the specific columns (Skipping E, F, G, H because of formulas)
-            sheet.cell(row=current_excel_row, column=2).value = row_data.get('Staff No.', '')
+            sheet.cell(row=current_excel_row, column=2).value = row_data.get('Staff Number', '')
             sheet.cell(row=current_excel_row, column=3).value = row_data.get('Employee Name', '')
             sheet.cell(row=current_excel_row, column=4).value = row_data.get('Basic Pay', 0)
             sheet.cell(row=current_excel_row, column=5).value = row_data.get('Other Allowances', 0)
@@ -254,6 +254,7 @@ with d1:
         st.session_state["results_df"] = None
 
         st.rerun()
+
 
 
 
