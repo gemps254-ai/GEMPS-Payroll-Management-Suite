@@ -184,14 +184,61 @@ if st.session_state["results_df"] is not None:
     c2.metric("PAYE to be Remitted (KRA)", f"KES {res_df['PAYE'].sum():,.2f}")
     c3.metric("Salaries Processed", len(res_df))
 
-    st.subheader("📦 Export Files")
-    d1, d2 = st.columns(2)
-    with d1:
-        # Instead of Master Excel from xw, create it via Pandas
+    import io
+import openpyxl
+from openpyxl.utils import get_column_letter
+
+st.subheader("📦 Export Files")
+d1, d2 = st.columns(2)
+
+with d1:
+    # 1. Load your existing template from the repository
+    template_path = "Payroll Summary Template.xlsx"
+    
+    try:
+        wb = openpyxl.load_workbook(template_path)
+        sheet = wb["Payroll Summary"]
+
+        # 2. Map your DataFrame (res_df) to the Template columns
+        # We start at Row 10. 
+        # Columns: B=2, C=3, D=4, I=9, J=10, K=11, L=12, M=13, N=14, O=15, Q=17
+        start_row = 10
+        
+        for i, row_data in res_df.iterrows():
+            current_excel_row = start_row + i
+            
+            # Fill the specific columns (Skipping E, F, G, H because of formulas)
+            sheet.cell(row=current_excel_row, column=2).value = row_data.get('Staff No.', '')
+            sheet.cell(row=current_excel_row, column=3).value = row_data.get('Employee Name', '')
+            sheet.cell(row=current_excel_row, column=4).value = row_data.get('Basic Pay', 0)
+            sheet.cell(row=current_excel_row, column=9).value = row_data.get('Pension Contribution', 0)
+            sheet.cell(row=current_excel_row, column=10).value = row_data.get('NSSF', 0)
+            sheet.cell(row=current_excel_row, column=11).value = row_data.get('SHIF', 0)
+            sheet.cell(row=current_excel_row, column=12).value = row_data.get('AHL', 0)
+            sheet.cell(row=current_excel_row, column=13).value = row_data.get('Taxable Salary', 0)
+            sheet.cell(row=current_excel_row, column=14).value = row_data.get('Personal Relief', 0)
+            sheet.cell(row=current_excel_row, column=15).value = row_data.get('PAYE', 0)
+            sheet.cell(row=current_excel_row, column=17).value = row_data.get('Net Pay', 0)
+
+        # 3. Optional: Hide extra rows if your template is longer than your data
+        # If your template has 100 rows but you only used 15:
+        max_template_rows = 100 
+        for row_to_hide in range(start_row + len(res_df), max_template_rows):
+            sheet.row_dimensions[row_to_hide].hidden = True
+
+        # 4. Save to a Buffer for Streamlit Download
         output = io.BytesIO()
-        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            res_df.to_excel(writer, index=False, sheet_name='Payroll Summary')
-        st.download_button("📊 Download Master Excel", output.getvalue(), f"{payroll_month}_Payroll_{payroll_year}.xlsx")
+        wb.save(output)
+        processed_data = output.getvalue()
+
+        st.download_button(
+            label="📊 Download Formatted Payroll Summary",
+            data=processed_data,
+            file_name=f"{payroll_month}_Payroll_{payroll_year}.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+    except FileNotFoundError:
+        st.error("Template file not found! Make sure 'Payroll Summary Template.xlsx' is in your GitHub repo.")
 
     with d2:
         zip_buffer = io.BytesIO()
@@ -206,6 +253,7 @@ if st.session_state["results_df"] is not None:
         st.session_state["results_df"] = None
 
         st.rerun()
+
 
 
 
