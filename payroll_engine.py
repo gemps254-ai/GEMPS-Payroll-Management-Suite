@@ -6,7 +6,7 @@ import io
 import zipfile
 from fpdf import FPDF
 
-st.set_page_config(page_title="GEMPS 🇰🇪 Payroll Pro", layout="wide")
+st.set_page_config(page_title="Fahiri 🇰🇪 Payroll Pro", layout="wide")
 
 # --- 1. THE PURE PYTHON CALCULATION ENGINE (REPLACES EXCEL) ---
 def run_payroll_calculations(df):
@@ -17,27 +17,27 @@ def run_payroll_calculations(df):
         extra = float(row["Other Allowances"])
         pension_contrib = float(row["Pension Contribution"])
         
-        # Gross Pay (Excel F10)
+        # Gross Pay
         gross_pay = basic + extra
         
-        # NSSF Calculation (Excel K10 logic)
-        # Using 2024/2025 Tier II cap (72,000 * 6%)
-        nssf_deduction = min(gross_pay * 0.06, 72000 * 0.06)
+        # NSSF Calculation
+        # Using Feb 2026 Tier II cap (108,000 * 6%)
+        nssf_deduction = min(gross_pay * 0.06, 108000 * 0.06)
         
-        # SHIF & AHL (Excel L10 & M10)
+        # SHIF & AHL
         shif = gross_pay * 0.0275
         housing_levy = gross_pay * 0.015
         
-        # Taxable Salary (Excel N10 logic)
+        # Taxable Salary
         # Standard Kenyan logic: Gross - NSSF - SHIF - Housing Levy - Allowable Pension (capped at 30k)
         p_limit = 30000
         allowable_pension = min(pension_contrib + nssf_deduction, p_limit)
         taxable_salary = gross_pay - nssf_deduction - shif - housing_levy - allowable_pension
         
-        # PAYE Brackets (Excel SUM(IF) logic)
+        # PAYE Brackets
         tax = 0
         rem = taxable_salary
-        # KRA 2024/2025 Brackets
+        # KRA Tax Brackets
         if rem > 0:
             # 10% on first 24,000
             b1 = min(rem, 24000)
@@ -62,26 +62,26 @@ def run_payroll_calculations(df):
             # 35% on anything above 800k
             tax += rem * 0.35
             
-        # Personal Relief (Excel O10)
+        # Personal Relief
         personal_relief = 2400.00
         paye = max(0, tax - personal_relief)
         
-        # Net Pay (Excel Q10)
+        # Net Pay
         net_pay = gross_pay - pension_contrib - nssf_deduction - shif - housing_levy - paye
         
         results.append({
             "Staff No": row["Staff_No."],
             "Employee": row["Employee Name"],
             "Basic Salary": basic,
-            "Allowances (KES)": extra,
-            "Pension (KES)": pension_contrib,
+            "Allowances": extra,
+            "Pension": pension_contrib,
             "Gross Pay (KES)": gross_pay,
-            "NSSF (KES)": nssf_deduction,
-            "SHIF (KES)": shif,
-            "Housing Levy (KES)": housing_levy,
-            "Taxable Salary (KES)": taxable_salary,
-            "Personal Relief (KES)": personal_relief,
-            "PAYE (KES)": paye,
+            "NSSF": nssf_deduction,
+            "SHIF": shif,
+            "Housing Levy": housing_levy,
+            "Taxable Salary": taxable_salary,
+            "Personal Relief": personal_relief,
+            "PAYE": paye,
             "Net Pay (KES)": net_pay
         })
     return pd.DataFrame(results)
@@ -91,7 +91,7 @@ class Payslip(FPDF):
     def header(self):
         self.set_font('Arial', 'B', 17)
         self.ln(15)
-        self.cell(0, 15, 'GEMPS KE LIMITED', 0, 1, 'C')
+        self.cell(0, 15, 'FAHIRI KE LIMITED', 0, 1, 'C')
         self.set_font('Arial', '', 12)
         self.cell(0, 5, 'Official Employee Payslip', 0, 1, 'C')
         self.ln(5)
@@ -130,7 +130,7 @@ def generate_payslip_pdf(emp_data, month, year):
     return pdf.output(dest='S')
 
 # --- APP LAYOUT (RETAINED) ---
-st.title("GEMPS 🇰🇪 Payroll Management Suite")
+st.title("Fahiri 🇰🇪 Payroll Management Suite")
 
 with st.sidebar:
     st.header("Payroll Data")
@@ -204,4 +204,5 @@ if st.session_state["results_df"] is not None:
     if st.button("🔄 Reset System"):
         st.session_state["employees"] = pd.DataFrame(columns=["Staff_No.", "Employee Name", "Basic Salary", "Other Allowances", "Pension Contribution"])
         st.session_state["results_df"] = None
+
         st.rerun()
