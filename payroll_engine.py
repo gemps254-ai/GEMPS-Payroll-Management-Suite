@@ -181,7 +181,7 @@ if st.session_state["results_df"] is not None:
     st.divider()
     c1, c2, c3 = st.columns(3)
     c1.metric("Bank Transfer for Salaries", f"KES {res_df['Net Pay (KES)'].sum():,.2f}")
-    c2.metric("PAYE to be Remitted (KRA)", f"KES {res_df['PAYE (KES)'].sum():,.2f}")
+    c2.metric("PAYE to be Remitted (KRA)", f"KES {res_df['PAYE'].sum():,.2f}")
     c3.metric("Salaries Processed", len(res_df))
 
     st.subheader("📦 Export Files")
@@ -206,3 +206,4 @@ if st.session_state["results_df"] is not None:
         st.session_state["results_df"] = None
 
         st.rerun()
+
